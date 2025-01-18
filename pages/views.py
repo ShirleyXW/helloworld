@@ -4,7 +4,14 @@ import pdb
 from django.shortcuts import render, HttpResponseRedirect
 from django.http import Http404
 from django.urls import reverse
-from django.views.generic import TemplateView
+from django.contrib.auth import logout
+
+
+def logoutView(request):
+    logout(request)
+    print("*****  You are logged out.")
+    return HttpResponseRedirect(reverse('home'))
+
 
 def homePageView(request):
     return render(request, 'home.html', {
@@ -73,3 +80,34 @@ def results(request, choice, gmat):
 
     return render(request, 'results.html', {'choice': workExperience, 'gmat': gmat,
                                             'prediction': singlePrediction})
+
+def todo(request):
+    return render(request, "todo.html")
+
+from django.shortcuts import render, redirect
+from .forms import RegisterForm
+
+def register(response):
+    # Handle POST request.
+    if response.method == "POST":
+        form = RegisterForm(response.POST)
+        if form.is_valid():
+            form.save()
+
+            return HttpResponseRedirect(reverse('message',
+                                                kwargs={'msg': "Your are registered.", 'title': "Success!"}, ))
+
+    # Handle GET request.
+    else:
+        form = RegisterForm()
+    return render(response, "registration/register.html", {"form":form})
+
+def message(request, msg, title):
+    return render(request, 'message.html', {'msg': msg, 'title': title })
+
+def secret_area(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('message',
+               kwargs={'msg': "Please login to access this page.",
+                       'title': "Login required."}, ))
+    return render(request, 'secret.html', {'useremail': request.user.username})
