@@ -5,6 +5,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.http import Http404
 from django.urls import reverse
 from django.contrib.auth import logout
+from .models import Item, ToDoList
 
 
 def logoutView(request):
@@ -111,3 +112,11 @@ def secret_area(request):
                kwargs={'msg': "Please login to access this page.",
                        'title': "Login required."}, ))
     return render(request, 'secret.html', {'useremail': request.user.username})
+
+def todos(request):
+    print("*** Inside todos()")
+    items = Item.objects
+    itemErrandDetail = items.select_related('todolist')
+    print(itemErrandDetail[0].todolist.name)
+    return render(request, 'ToDoItems.html',
+                {'ToDoItemDetail': itemErrandDetail})

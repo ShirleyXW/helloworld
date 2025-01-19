@@ -20,7 +20,7 @@
             <div class="navbar-nav">
                 <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
                 <a class="nav-link" href="{% url 'about' %}">About</a>
-                <a class="nav-link" href="{% url 'todo' %}">To do</a>
+                <a class="nav-link" href="{% url 'todos' %}">Todos</a>
                 {% if user.is_authenticated %}
                 <a class="nav-link" href="{% url 'secret' %}">Secret</a>
                 {% endif %}
